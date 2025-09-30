@@ -1,29 +1,35 @@
 #Author Niranjan D B
-import time
+import time,os
+
+if os.path.exists("D:/Learning/Coding/Python/log.txt"):
+            os.remove("D:/Learning/Coding/Python/log.txt")
+
+
 def decorator(funcpointer):
     def innerfunction(*args,**kwds):
         a=time.time()
-        f= funcpointer(*args,**kwds)
+        f=funcpointer(*args,**kwds)
         b=time.time()
-        return(b-a,f)
+        print("Time Taken to execute the function is ",b-a)
+        return f
     return innerfunction
 
 def logwriting(funcpointer):
     def innerfunction(*args,**kwds):
-        with open("D:/Learning/Coding/Python/log.txt",'w') as file:
-            file.write("Function started...\nTime Taken to execute the given function is ")
-            file.write(str(funcpointer(*args,**kwds)[0]))
-            file.write("\nOutput of the given function is ")
-            file.write(str(funcpointer(*args,**kwds)[1]))
-            file.write("\nFunction Completed...")
+        with open("D:/Learning/Coding/Python/log.txt",'a') as file:
+            file.write("Function started...\nOutput of the given function is ")
+            z=funcpointer(*args,**kwds)
+            file.write(str(z))
+            file.write("\nFunction Completed...\n\n")
+            return z
     return innerfunction
 
 @logwriting
 @decorator
 def Avg(*args):
     if(len(args))==0:
-        return None        #Here Value error will not be excecuted. Expected to return None when no inputs.
-        raise ValueError("Expecte atleast an integer/float Value to return the average")
+        return None
+        raise ValueError("Expected atleast an integer/float Value to return the average")
     
     else:
         return sum(args)/len(args)
